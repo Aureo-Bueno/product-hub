@@ -1,127 +1,703 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <title>Listagem</title>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <title>Listagem de Categorias - Web</title>
-</head>
-
-<body onload="list()">
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="create.html">Cadastro</a>
-                    </li>
-                </ul>
-            </div>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Loja Produtos</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="create.html">Cadastro</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="list.html">Listagem</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
-    <main class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-12 mt-5">
-                <div class="card">
-                    <div class="card-body">
-                        <h1 class="h1 text-center">Tabela de Categorias</h1>
-                        <table class="table table-striped table-hover" id="table-list">
-                            <thead>
-                                <th scope="row">Nome da Categoria</th>
-                                <th scope="row">Departamento</th>
-                                <th scope="row">Data de Cadastro</th>
-                                <th scope="row">Ações</th>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <main class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="card shadow border-0">
+            <div
+              class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3 flex-wrap gap-2"
+            >
+              <h2 class="h4 mb-0">Listagem</h2>
+              <div class="d-flex gap-2">
+                <a href="create.html" class="btn btn-light btn-sm">+ Novo</a>
+                <a href="/api/categories/export" class="btn btn-success btn-sm"
+                  >CSV</a
+                >
+              </div>
             </div>
+            <div class="card-body">
+              <ul class="nav nav-tabs mb-4" id="listTab">
+                <li class="nav-item">
+                  <button
+                    class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tabCategorias"
+                  >
+                    Categorias
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tabDepartamentos"
+                  >
+                    Departamentos
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tabProdutos"
+                  >
+                    Produtos
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="tabCategorias">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="catSearch"
+                          placeholder="Buscar por nome, descrição ou departamento..."
+                          onkeyup="catSearch(event)"
+                        />
+                        <button
+                          class="btn btn-outline-secondary"
+                          onclick="loadCategories()"
+                        >
+                          Buscar
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <select
+                        class="form-select"
+                        id="catSort"
+                        onchange="loadCategories()"
+                      >
+                        <option value="date|desc">Mais recentes</option>
+                        <option value="date|asc">Mais antigas</option>
+                        <option value="name|asc">Nome A-Z</option>
+                        <option value="name|desc">Nome Z-A</option>
+                        <option value="favorite|desc">
+                          Favoritas primeiro
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        class="btn btn-outline-danger w-100"
+                        onclick="
+                          window.location = '?tab=categorias&filter=favorites'
+                        "
+                      >
+                        Favoritas
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                      <thead class="table-dark">
+                        <tr>
+                          <th>Nome</th>
+                          <th>Departamento</th>
+                          <th>Descrição</th>
+                          <th>Tags</th>
+                          <th>Data</th>
+                          <th class="text-center">Fav</th>
+                          <th class="text-center">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="catTableBody"></tbody>
+                    </table>
+                  </div>
+                  <nav class="mt-3">
+                    <ul
+                      class="pagination justify-content-center"
+                      id="catPagination"
+                    ></ul>
+                  </nav>
+                </div>
+
+                <div class="tab-pane fade" id="tabDepartamentos">
+                  <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                      <thead class="table-dark">
+                        <tr>
+                          <th>ID</th>
+                          <th>Nome</th>
+                          <th class="text-center">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="deptTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="tabProdutos">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <div class="input-group">
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="prodSearch"
+                          placeholder="Buscar por nome ou descrição..."
+                          onkeyup="prodSearch(event)"
+                        />
+                        <button
+                          class="btn btn-outline-secondary"
+                          onclick="loadProducts()"
+                        >
+                          Buscar
+                        </button>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <select
+                        class="form-select"
+                        id="prodSort"
+                        onchange="loadProducts()"
+                      >
+                        <option value="date|desc">Mais recentes</option>
+                        <option value="date|asc">Mais antigos</option>
+                        <option value="name|asc">Nome A-Z</option>
+                        <option value="name|desc">Nome Z-A</option>
+                        <option value="price|asc">Menor preço</option>
+                        <option value="price|desc">Maior preço</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        class="btn btn-outline-danger w-100"
+                        onclick="loadProdFavorites()"
+                      >
+                        Favoritos
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                      <thead class="table-dark">
+                        <tr>
+                          <th>Nome</th>
+                          <th>Preço</th>
+                          <th>Categoria</th>
+                          <th>Departamento</th>
+                          <th>Tags</th>
+                          <th>Data</th>
+                          <th class="text-center">Fav</th>
+                          <th class="text-center">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="prodTableBody"></tbody>
+                    </table>
+                  </div>
+                  <nav class="mt-3">
+                    <ul
+                      class="pagination justify-content-center"
+                      id="prodPagination"
+                    ></ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </main>
 
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/bootstrap.esm.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/javascript">
-        function list(name, dateCreate, department, acept) {
-            //POST, PUT, GET, DELETE -> VERBOS HTTP
-            fetch("https://localhost:7006/categories", {
-                method: "GET",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then((response) => response.json())
-                .then((result) => {
-                    render(result);
-                })
-                .catch((error) => {
-                    Swal.fire(
-                        'Error 500',
-                        'Houve um erro ao listar as categorias!',
-                        'error'
-                    )
-                })
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+      <p class="mb-0">&copy; 2026 Loja Produtos</p>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      let catCurrentPage = 1,
+        catTotalPages = 1,
+        filterFavorites = false;
+      let prodCurrentPage = 1,
+        prodTotalPages = 1,
+        prodFavOnly = false;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get("tab") || "categorias";
+        filterFavorites = params.get("filter") === "favorites";
+
+        const tabMap = { categorias: 0, departments: 1, products: 2 };
+        const idx = tabMap[tab] || 0;
+        const tabs = document.querySelectorAll("#listTab .nav-link");
+        if (tabs[idx]) {
+          new bootstrap.Tab(tabs[idx]).show();
         }
 
-        function render(categories) {
-            let table = document.querySelector("#table-list tbody");
+        loadCategories();
+        loadDepartments();
+        loadProducts();
+      });
 
-            while (table.firstChild) {
-                table.removeChild(table.firstChild);
+      document
+        .getElementById("listTab")
+        .addEventListener("shown.bs.tab", function (e) {
+          if (e.target.id === "dept-tab") loadDepartments();
+        });
+
+      function api(endpoint, options) {
+        return fetch(endpoint, {
+          headers: { "Content-Type": "application/json" },
+          ...options,
+        }).then((r) => {
+          if (!r.ok)
+            return r.json().then((e) => {
+              throw new Error(e.title || e.message || "Erro");
+            });
+          return r.json();
+        });
+      }
+
+      function catSearch(event) {
+        if (event && event.key && event.key !== "Enter") return;
+        catCurrentPage = 1;
+        loadCategories();
+      }
+
+      function loadCategories(page) {
+        if (page) catCurrentPage = page;
+        const search = document.getElementById("catSearch").value.trim();
+        const sortVal = document.getElementById("catSort").value;
+        const [sort, order] = sortVal.split("|");
+
+        let url =
+          "/api/categories?page=" +
+          catCurrentPage +
+          "&limit=10&sort=" +
+          sort +
+          "&order=" +
+          order;
+        if (search) url += "&search=" + encodeURIComponent(search);
+
+        const tbody = document.getElementById("catTableBody");
+        tbody.innerHTML =
+          '<tr><td colspan="7" class="text-center py-4"><div class="spinner-border"></div></td></tr>';
+
+        const fetchUrl = filterFavorites ? "/api/categories/favorites" : url;
+
+        api(fetchUrl)
+          .then((res) => {
+            if (filterFavorites) {
+              renderCatTable(res, {
+                total: res.length,
+                totalPages: 1,
+                page: 1,
+              });
+            } else {
+              renderCatTable(res.data, res);
             }
+          })
+          .catch(() => {
+            tbody.innerHTML =
+              '<tr><td colspan="7" class="text-center text-danger">Erro ao carregar</td></tr>';
+          });
+      }
 
-            for (let categorie of categories) {
-                let line = `
-                    <tr>
-                        <td>${categorie.name}</td>
-                        <td>${categorie.department}</td>
-                        <td>${categorie.dateCreate}</td>
-                        <td><a href="javascript: deleteCategorie(${categorie.id});" class="btn btn-danger">Excluir</a></td>
-                    <tr>
-                `;
-                let tr = document.createElement("tr");
-                tr.innerHTML = line;
-                table.appendChild(tr);
+      function renderCatTable(categories, pagination) {
+        const tbody = document.getElementById("catTableBody");
+        const pag = document.getElementById("catPagination");
+        tbody.innerHTML = "";
+
+        if (!categories || categories.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" class="text-center text-muted py-4">Nenhuma categoria encontrada.</td></tr>';
+          pag.innerHTML = "";
+          return;
+        }
+
+        for (let c of categories) {
+          const date = new Date(c.dateCreate).toLocaleDateString("pt-BR");
+          const tags = (c.tags || [])
+            .map(
+              (t) => '<span class="badge bg-secondary me-1">' + t + "</span>",
+            )
+            .join("");
+          const favIcon = c.isFavorite ? "❤️" : "🤍";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td class="fw-semibold">' +
+            c.name +
+            "</td>" +
+            '<td><span class="badge bg-info text-dark">' +
+            (c.departmentName || "-") +
+            "</span></td>" +
+            '<td><small class="text-muted">' +
+            (c.description
+              ? c.description.substring(0, 50) +
+                (c.description.length > 50 ? "..." : "")
+              : "-") +
+            "</small></td>" +
+            "<td>" +
+            (tags || '<small class="text-muted">-</small>') +
+            "</td>" +
+            "<td><small>" +
+            date +
+            "</small></td>" +
+            '<td class="text-center"><span style="cursor:pointer" onclick="toggleCatFav(' +
+            c.id +
+            ')">' +
+            favIcon +
+            "</span></td>" +
+            '<td class="text-center">' +
+            '<button onclick="deleteCat(' +
+            c.id +
+            ')" class="btn btn-danger btn-sm" title="Excluir">Excluir</button>' +
+            "</td>";
+          tbody.appendChild(tr);
+        }
+
+        if (pagination && pagination.totalPages > 1) {
+          catTotalPages = pagination.totalPages;
+          renderCatPagination(pagination);
+        } else {
+          pag.innerHTML = "";
+        }
+      }
+
+      function renderCatPagination(p) {
+        const pag = document.getElementById("catPagination");
+        let html =
+          '<li class="page-item ' +
+          (p.page <= 1 ? "disabled" : "") +
+          '"><button class="page-link" onclick="loadCategories(' +
+          (p.page - 1) +
+          ')">Anterior</button></li>';
+        for (let i = 1; i <= p.totalPages; i++) {
+          html +=
+            '<li class="page-item ' +
+            (i === p.page ? "active" : "") +
+            '"><button class="page-link" onclick="loadCategories(' +
+            i +
+            ')">' +
+            i +
+            "</button></li>";
+        }
+        html +=
+          '<li class="page-item ' +
+          (p.page >= p.totalPages ? "disabled" : "") +
+          '"><button class="page-link" onclick="loadCategories(' +
+          (p.page + 1) +
+          ')">Próximo</button></li>';
+        pag.innerHTML = html;
+      }
+
+      function toggleCatFav(id) {
+        api("/api/categories/" + id + "/favorite", { method: "POST" })
+          .then(() => loadCategories(catCurrentPage))
+          .catch(() =>
+            Swal.fire({ icon: "error", title: "Erro ao alternar favorito" }),
+          );
+      }
+
+      function deleteCat(id) {
+        Swal.fire({
+          icon: "warning",
+          title: "Confirmar exclusão",
+          text: "Tem certeza? A categoria será desativada (soft delete).",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          confirmButtonText: "Sim, excluir!",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            api("/api/categories/" + id, { method: "DELETE" })
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "Excluída!",
+                  timer: 1500,
+                  showConfirmButton: false,
+                });
+                loadCategories(catCurrentPage);
+              })
+              .catch(() =>
+                Swal.fire({ icon: "error", title: "Erro ao excluir" }),
+              );
+          }
+        });
+      }
+
+      function loadDepartments() {
+        const tbody = document.getElementById("deptTableBody");
+        tbody.innerHTML =
+          '<tr><td colspan="3" class="text-center py-4"><div class="spinner-border"></div></td></tr>';
+
+        api("/api/departments")
+          .then((depts) => {
+            tbody.innerHTML = "";
+            if (!depts || depts.length === 0) {
+              tbody.innerHTML =
+                '<tr><td colspan="3" class="text-center text-muted py-4">Nenhum departamento encontrado.</td></tr>';
+              return;
             }
+            for (let d of depts) {
+              const tr = document.createElement("tr");
+              tr.innerHTML =
+                "<td>" +
+                d.id +
+                "</td>" +
+                '<td class="fw-semibold">' +
+                d.name +
+                "</td>" +
+                '<td class="text-center"><button onclick="deleteDept(' +
+                d.id +
+                ')" class="btn btn-danger btn-sm" title="Excluir">Excluir</button></td>';
+              tbody.appendChild(tr);
+            }
+          })
+          .catch(() => {
+            tbody.innerHTML =
+              '<tr><td colspan="3" class="text-center text-danger">Erro ao carregar</td></tr>';
+          });
+      }
+
+      function deleteDept(id) {
+        Swal.fire({
+          icon: "warning",
+          title: "Confirmar exclusão",
+          text: "Departamentos com categorias vinculadas não podem ser excluídos.",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          confirmButtonText: "Sim, excluir!",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            api("/api/departments/" + id, { method: "DELETE" })
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "Excluído!",
+                  timer: 1500,
+                  showConfirmButton: false,
+                });
+                loadDepartments();
+              })
+              .catch((err) =>
+                Swal.fire({ icon: "error", title: "Erro", text: err.message }),
+              );
+          }
+        });
+      }
+
+      function prodSearch(event) {
+        if (event && event.key && event.key !== "Enter") return;
+        prodCurrentPage = 1;
+        loadProducts();
+      }
+
+      function loadProducts(page) {
+        if (page) prodCurrentPage = page;
+        const search = document.getElementById("prodSearch").value.trim();
+        const sortVal = document.getElementById("prodSort").value;
+        const [sort, order] = sortVal.split("|");
+
+        let url =
+          "/api/products?page=" +
+          prodCurrentPage +
+          "&limit=10&sort=" +
+          sort +
+          "&order=" +
+          order;
+        if (search) url += "&search=" + encodeURIComponent(search);
+
+        const tbody = document.getElementById("prodTableBody");
+        tbody.innerHTML =
+          '<tr><td colspan="8" class="text-center py-4"><div class="spinner-border"></div></td></tr>';
+
+        const fetchUrl = prodFavOnly ? "/api/products/favorites" : url;
+
+        api(fetchUrl)
+          .then((res) => {
+            if (prodFavOnly) {
+              renderProdTable(res, {
+                total: res.length,
+                totalPages: 1,
+                page: 1,
+              });
+            } else {
+              renderProdTable(res.data, res);
+            }
+          })
+          .catch(() => {
+            tbody.innerHTML =
+              '<tr><td colspan="8" class="text-center text-danger">Erro ao carregar</td></tr>';
+          });
+      }
+
+      function renderProdTable(products, pagination) {
+        const tbody = document.getElementById("prodTableBody");
+        const pag = document.getElementById("prodPagination");
+        tbody.innerHTML = "";
+
+        if (!products || products.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="8" class="text-center text-muted py-4">Nenhum produto encontrado.</td></tr>';
+          pag.innerHTML = "";
+          return;
         }
 
-        function deleteCategorie(id) {
-            //POST, PUT, GET, DELETE -> VERBOS HTTP
-            fetch("https://localhost:7006/categories/"+id, {
-                method: "DELETE",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            }).then((response) => response.json())
-                .then((result) => {
-                    list(result);
-                })
-                .catch((error) => {
-                    Swal.fire(
-                        'Error 500',
-                        'Houve um erro ao excluir a categoria!',
-                        'error'
-                    )
-                })
+        for (let p of products) {
+          const date = new Date(p.dateCreate).toLocaleDateString("pt-BR");
+          const tags = (p.tags || [])
+            .map(
+              (t) => '<span class="badge bg-secondary me-1">' + t + "</span>",
+            )
+            .join("");
+          const favIcon = p.isFavorite ? "❤️" : "🤍";
+          const price = "R$ " + p.price.toFixed(2).replace(".", ",");
+
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td class="fw-semibold">' +
+            p.name +
+            "</td>" +
+            "<td><strong>" +
+            price +
+            "</strong></td>" +
+            '<td><span class="badge bg-info text-dark">' +
+            (p.categoryName || "-") +
+            "</span></td>" +
+            '<td><small class="text-muted">' +
+            (p.departmentName || "-") +
+            "</small></td>" +
+            "<td>" +
+            (tags || '<small class="text-muted">-</small>') +
+            "</td>" +
+            "<td><small>" +
+            date +
+            "</small></td>" +
+            '<td class="text-center"><span style="cursor:pointer" onclick="toggleProdFav(' +
+            p.id +
+            ')">' +
+            favIcon +
+            "</span></td>" +
+            '<td class="text-center">' +
+            '<button onclick="deleteProd(' +
+            p.id +
+            ')" class="btn btn-danger btn-sm" title="Excluir">Excluir</button>' +
+            "</td>";
+          tbody.appendChild(tr);
         }
+
+        if (pagination && pagination.totalPages > 1) {
+          prodTotalPages = pagination.totalPages;
+          renderProdPagination(pagination);
+        } else {
+          pag.innerHTML = "";
+        }
+      }
+
+      function renderProdPagination(p) {
+        const pag = document.getElementById("prodPagination");
+        let html =
+          '<li class="page-item ' +
+          (p.page <= 1 ? "disabled" : "") +
+          '"><button class="page-link" onclick="loadProducts(' +
+          (p.page - 1) +
+          ')">Anterior</button></li>';
+        for (let i = 1; i <= p.totalPages; i++) {
+          html +=
+            '<li class="page-item ' +
+            (i === p.page ? "active" : "") +
+            '"><button class="page-link" onclick="loadProducts(' +
+            i +
+            ')">' +
+            i +
+            "</button></li>";
+        }
+        html +=
+          '<li class="page-item ' +
+          (p.page >= p.totalPages ? "disabled" : "") +
+          '"><button class="page-link" onclick="loadProducts(' +
+          (p.page + 1) +
+          ')">Próximo</button></li>';
+        pag.innerHTML = html;
+      }
+
+      function toggleProdFav(id) {
+        api("/api/products/" + id + "/favorite", { method: "POST" })
+          .then(() => loadProducts(prodCurrentPage))
+          .catch(() =>
+            Swal.fire({ icon: "error", title: "Erro ao alternar favorito" }),
+          );
+      }
+
+      function loadProdFavorites() {
+        prodFavOnly = !prodFavOnly;
+        prodCurrentPage = 1;
+        loadProducts();
+      }
+
+      function deleteProd(id) {
+        Swal.fire({
+          icon: "warning",
+          title: "Confirmar exclusão",
+          text: "Tem certeza? O produto será desativado (soft delete).",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          confirmButtonText: "Sim, excluir!",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            api("/api/products/" + id, { method: "DELETE" })
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "Excluído!",
+                  timer: 1500,
+                  showConfirmButton: false,
+                });
+                loadProducts(prodCurrentPage);
+              })
+              .catch(() =>
+                Swal.fire({ icon: "error", title: "Erro ao excluir" }),
+              );
+          }
+        });
+      }
     </script>
-</body>
-
+  </body>
 </html>

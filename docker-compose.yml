@@ -1,0 +1,42 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Str0ngPass_2024!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Str0ngPass_2024!" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: src/LojaProdutos.API/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=ProjectWeb;User=sa;Password=Str0ngPass_2024!;TrustServerCertificate=True;"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      GEMINI_MODEL: "gemini-2.0-flash"
+    ports:
+      - "7006:80"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  sqlserver_data:

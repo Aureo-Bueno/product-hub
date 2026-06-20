@@ -5,143 +5,419 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <title>Cadastro - Web</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <title>Cadastro</title>
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Loja Produtos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="list.html">Listagem</a>
-                    </li>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="create.html">Cadastro</a></li>
+                    <li class="nav-item"><a class="nav-link" href="list.html">Listagem</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <main>
-        <div class="container">
-            <div class="row">
-                <h1 class="h1 text-center mt-2">Cadastro</h1>
-                <div class="card mt-5">
-                    <div class="card-body">
-                        <form onsubmit="return create()">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="name"
-                                    placeholder="Preencha o nome completo...">
+    <main class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h2 class="h4 mb-0">Cadastro</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <ul class="nav nav-tabs mb-4" id="cadastroTab">
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabCategoria">Categoria</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDepartamento">Departamento</button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabProduto">Produto</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tabCategoria">
+                                <form id="categoryForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="catName" class="form-label fw-semibold">Nome</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="catName" placeholder="Ex: Inteligência Artificial" required>
+                                                <button type="button" class="btn btn-outline-warning" onclick="correctCatName()" title="Corrigir nome com IA">Corrigir</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="catDepartmentId" class="form-label fw-semibold">Departamento</label>
+                                            <select class="form-select" id="catDepartmentId"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="catDescription" class="form-label fw-semibold">Descrição</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="catDescription" rows="2" placeholder="Descrição da categoria..."></textarea>
+                                            <button type="button" class="btn btn-outline-info" onclick="generateCatDescription()" title="Gerar descrição com IA">Gerar</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="catDateCreate" class="form-label fw-semibold">Data de Cadastro</label>
+                                            <input type="date" class="form-control" id="catDateCreate" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="catParentId" class="form-label fw-semibold">Categoria Pai</label>
+                                            <select class="form-select" id="catParentId">
+                                                <option value="">Nenhuma (raiz)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="catTags" class="form-label fw-semibold">Tags</label>
+                                        <input type="text" class="form-control" id="catTags" placeholder="backend, java, spring (separadas por vírgula)">
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <button type="button" class="btn btn-outline-danger w-100" onclick="checkDuplicate()">Verificar Duplicidade</button>
+                                        </div>
+                                        <div class="col-md-6" id="duplicateResult"></div>
+                                    </div>
+
+                                    <div class="mb-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="catAcept">
+                                        <label class="form-check-label" for="catAcept">Aceito os termos e condições</label>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">Cadastrar Categoria</button>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label for="dateCreate" class="form-label">Data Cadastro</label>
-                                <input type="date" class="form-control" id="dateCreate"
-                                    placeholder="Preencha com a data de cadastro...">
+
+                            <div class="tab-pane fade" id="tabDepartamento">
+                                <form id="departmentForm">
+                                    <div class="mb-3">
+                                        <label for="deptName" class="form-label fw-semibold">Nome do Departamento</label>
+                                        <input type="text" class="form-control" id="deptName" placeholder="Ex: Vendas, Marketing..." required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Criar Departamento</button>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label for="department" class="form-label">Departamento</label>
-                                <select class="form-control" id="department">
-                                    <option value="Informatica">Informatica</option>
-                                    <option value="Logistica">Logistica</option>
-                                </select>
+
+                            <div class="tab-pane fade" id="tabProduto">
+                                <form id="productForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="prodName" class="form-label fw-semibold">Nome</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="prodName" placeholder="Ex: Notebook Dell" required>
+                                                <button type="button" class="btn btn-outline-warning" onclick="correctProdName()" title="Corrigir nome com IA">Corrigir</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="prodPrice" class="form-label fw-semibold">Preço</label>
+                                            <input type="number" step="0.01" min="0" class="form-control" id="prodPrice" placeholder="0,00">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="prodDescription" class="form-label fw-semibold">Descrição</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="prodDescription" rows="2" placeholder="Descrição do produto..."></textarea>
+                                            <button type="button" class="btn btn-outline-info" onclick="generateProdDescription()" title="Gerar descrição com IA">Gerar</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="prodCategoryId" class="form-label fw-semibold">Categoria</label>
+                                            <select class="form-select" id="prodCategoryId"></select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="prodDateCreate" class="form-label fw-semibold">Data de Cadastro</label>
+                                            <input type="date" class="form-control" id="prodDateCreate" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="prodTags" class="form-label fw-semibold">Tags</label>
+                                        <input type="text" class="form-control" id="prodTags" placeholder="eletrônicos, promoção (separadas por vírgula)">
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">Cadastrar Produto</button>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <input type="checkbox" class="form-check-input" id="acept">
-                                <label for="dateCreate" class="form-check-box">Aceite</label>
-                            </div>
-                            <input type="submit" class="btn btn-primary" value="Cadastrar">
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/javascript">
-        function submit(name, dateCreate, department, acept) {
-            //POST, PUT, GET, DELETE -> VERBOS HTTP
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">&copy; 2026 Loja Produtos</p>
+    </footer>
 
-            const data = {
-                name: name,
-                dateCreate: dateCreate,
-                department: department,
-            }
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            loadDepartments();
+            loadParentCategories();
+            loadProductCategories();
 
-            fetch("https://localhost:7006/categories", {
-                method: "POST",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            }).then((response) => response.json())
-                .then((result) => {
-                    Swal.fire(
-                        'Sucesso',
-                        'Cadastro realizado com sucesso!',
-                        'success'
-                    )
-                })
-                .catch((error) => {
-                    Swal.fire(
-                        'Error 500',
-                        'Houve um erro ao cadastrar!',
-                        'error'
-                    )
-                })
+            document.getElementById("categoryForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                createCategory();
+            });
+            document.getElementById("departmentForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                createDepartment();
+            });
+            document.getElementById("productForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                createProduct();
+            });
+        });
+
+        function api(endpoint, options) {
+            return fetch(endpoint, {
+                headers: { "Content-Type": "application/json" },
+                ...options
+            }).then(r => {
+                if (!r.ok) return r.json().then(e => { throw new Error(e.title || e.message || "Erro"); });
+                return r.json();
+            });
         }
 
-        function create() {
-            let name = document.getElementById("name").value;
-            let dateCreate = document.getElementById("dateCreate").value;
-            let department = document.getElementById("department").value;
-            let acept = document.getElementById("acept").checked;
+        function loadDepartments() {
+            api("/api/departments").then(depts => {
+                const sel = document.getElementById("catDepartmentId");
+                sel.innerHTML = '<option value="">Selecione...</option>';
+                for (let d of depts) {
+                    const opt = document.createElement("option");
+                    opt.value = d.id;
+                    opt.textContent = d.name;
+                    sel.appendChild(opt);
+                }
+            }).catch(() => {});
+        }
 
-            let splitDate = dateCreate.split("-");
-            let year = splitDate[0];
-            let month = splitDate[1];
-            let day = splitDate[3];
+        function loadParentCategories() {
+            api("/api/categories?limit=200&sort=name&order=asc").then(res => {
+                const select = document.getElementById("catParentId");
+                const categories = res.data || res;
+                for (let c of categories) {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    select.appendChild(opt);
+                }
+            }).catch(() => {});
+        }
 
-            let now = new Date();
+        function loadProductCategories() {
+            api("/api/categories?limit=200&sort=name&order=asc").then(res => {
+                const select = document.getElementById("prodCategoryId");
+                const categories = res.data || res;
+                for (let c of categories) {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    select.appendChild(opt);
+                }
+            }).catch(() => {});
+        }
 
-            let errors = [];
-            //verificar o nome completo
-            if (name.indexOf(" ") === -1) {
-                errors.push("Preencha o nome completo!");
+        function createCategory() {
+            const name = document.getElementById("catName").value.trim();
+            const description = document.getElementById("catDescription").value.trim();
+            const dateCreate = document.getElementById("catDateCreate").value;
+            const departmentId = document.getElementById("catDepartmentId").value;
+            const parentId = document.getElementById("catParentId").value;
+            const tags = document.getElementById("catTags").value.split(",").map(t => t.trim()).filter(t => t);
+            const acept = document.getElementById("catAcept").checked;
+            const errors = [];
+
+            if (!name || name.length < 5)
+                errors.push("Nome deve ter pelo menos 5 caracteres.");
+            if (!dateCreate) errors.push("Selecione a data!");
+            else {
+                const p = dateCreate.split("-"), y = parseInt(p[0]), m = parseInt(p[1]), d = parseInt(p[2]);
+                const now = new Date();
+                if (y !== now.getFullYear()) errors.push("O ano deve ser atual!");
+                if (new Date(y, m - 1, d) > now) errors.push("Data não pode ser futura!");
+            }
+            if (!departmentId) errors.push("Selecione um departamento!");
+            if (!acept) errors.push("Aceite os termos!");
+
+            if (errors.length > 0) {
+                return Swal.fire({ icon: 'error', title: 'Erro de validação', html: errors.join("<br>") });
             }
 
-            if (now.getFullYear() !== parseInt(year)) {
-                errors.push("O ano tem que ser o ano atual!");
+            const data = {
+                name,
+                description: description || null,
+                dateCreate,
+                departmentId: parseInt(departmentId),
+                tags: tags.length ? tags : null
+            };
+            if (parentId) data.parentId = parseInt(parentId);
+
+            api("/api/categories", {
+                method: "POST",
+                body: JSON.stringify(data)
+            })
+                .then(() => {
+                    Swal.fire({ icon: 'success', title: 'Categoria cadastrada!', showConfirmButton: false, timer: 2000 });
+                    document.getElementById("categoryForm").reset();
+                    document.getElementById("duplicateResult").innerHTML = "";
+                })
+                .catch(err => Swal.fire({ icon: 'error', title: 'Erro', text: err.message }));
+        }
+
+        function createDepartment() {
+            const name = document.getElementById("deptName").value.trim();
+            if (!name) return Swal.fire({ icon: 'warning', title: 'Digite o nome do departamento' });
+
+            api("/api/departments", {
+                method: "POST",
+                body: JSON.stringify({ name })
+            })
+                .then(() => {
+                    Swal.fire({ icon: 'success', title: 'Departamento criado!', showConfirmButton: false, timer: 2000 });
+                    document.getElementById("departmentForm").reset();
+                    loadDepartments();
+                })
+                .catch(err => Swal.fire({ icon: 'error', title: 'Erro', text: err.message }));
+        }
+
+        function createProduct() {
+            const name = document.getElementById("prodName").value.trim();
+            const price = parseFloat(document.getElementById("prodPrice").value) || 0;
+            const description = document.getElementById("prodDescription").value.trim();
+            const categoryId = document.getElementById("prodCategoryId").value;
+            const dateCreate = document.getElementById("prodDateCreate").value;
+            const tags = document.getElementById("prodTags").value.split(",").map(t => t.trim()).filter(t => t);
+            const errors = [];
+
+            if (!name || name.length < 3) errors.push("Nome deve ter pelo menos 3 caracteres.");
+            if (!categoryId) errors.push("Selecione uma categoria!");
+            if (!dateCreate) errors.push("Selecione a data!");
+            else {
+                const p = dateCreate.split("-"), y = parseInt(p[0]);
+                const now = new Date();
+                if (y !== now.getFullYear()) errors.push("O ano deve ser atual!");
             }
 
-            if (!acept) {
-                errors.push("Aceite os termos!");
+            if (errors.length > 0) {
+                return Swal.fire({ icon: 'error', title: 'Erro de validação', html: errors.join("<br>") });
             }
 
-            if (errors.length == 0) {
-                submit(name, dateCreate, department, acept);
-            } else {
-                Swal.fire(
-                    'Preencha os dados corretamente!',
-                    errors.join("<br>"),
-                    'error'
-                )
-            }
+            api("/api/products", {
+                method: "POST",
+                body: JSON.stringify({
+                    name,
+                    price,
+                    description: description || null,
+                    categoryId: parseInt(categoryId),
+                    dateCreate,
+                    tags: tags.length ? tags : null
+                })
+            })
+                .then(() => {
+                    Swal.fire({ icon: 'success', title: 'Produto cadastrado!', showConfirmButton: false, timer: 2000 });
+                    document.getElementById("productForm").reset();
+                })
+                .catch(err => Swal.fire({ icon: 'error', title: 'Erro', text: err.message }));
+        }
 
-            return false;
+        function generateCatDescription() {
+            const name = document.getElementById("catName").value.trim();
+            if (!name) return Swal.fire({ icon: 'warning', title: 'Digite o nome primeiro' });
+
+            api("/api/categories/generate-description", {
+                method: "POST",
+                body: JSON.stringify({ name })
+            })
+                .then(data => {
+                    document.getElementById("catDescription").value = data.description || "";
+                    Swal.fire({ icon: 'success', title: 'Descrição gerada!' });
+                })
+                .catch(() => Swal.fire({ icon: 'error', title: 'Erro ao gerar descrição' }));
+        }
+
+        function generateProdDescription() {
+            const name = document.getElementById("prodName").value.trim();
+            if (!name) return Swal.fire({ icon: 'warning', title: 'Digite o nome primeiro' });
+
+            api("/api/products/generate-description", {
+                method: "POST",
+                body: JSON.stringify({ name })
+            })
+                .then(data => {
+                    document.getElementById("prodDescription").value = data.description || "";
+                    Swal.fire({ icon: 'success', title: 'Descrição gerada!' });
+                })
+                .catch(() => Swal.fire({ icon: 'error', title: 'Erro ao gerar descrição' }));
+        }
+
+        function correctCatName() {
+            const name = document.getElementById("catName").value.trim();
+            if (!name) return;
+
+            api("/api/categories/correct-name", {
+                method: "POST",
+                body: JSON.stringify({ prompt: name })
+            })
+                .then(data => {
+                    if (data.corrected) document.getElementById("catName").value = data.corrected;
+                })
+                .catch(() => {});
+        }
+
+        function correctProdName() {
+            const name = document.getElementById("prodName").value.trim();
+            if (!name) return;
+
+            api("/api/products/correct-name", {
+                method: "POST",
+                body: JSON.stringify({ text: name })
+            })
+                .then(data => {
+                    if (data.corrected) document.getElementById("prodName").value = data.corrected;
+                })
+                .catch(() => {});
+        }
+
+        function checkDuplicate() {
+            const name = document.getElementById("catName").value.trim();
+            const result = document.getElementById("duplicateResult");
+            if (!name) { result.innerHTML = '<span class="text-warning">Digite o nome</span>'; return; }
+
+            api("/api/categories/check-duplicate", {
+                method: "POST",
+                body: JSON.stringify({ name })
+            })
+                .then(data => {
+                    if (data.isDuplicate) {
+                        result.innerHTML = '<span class="text-danger">Já existe: ' + data.category.name + '</span>';
+                    } else {
+                        result.innerHTML = '<span class="text-success">Nome disponível</span>';
+                    }
+                })
+                .catch(() => result.innerHTML = '<span class="text-warning">Erro ao verificar</span>');
         }
     </script>
 </body>

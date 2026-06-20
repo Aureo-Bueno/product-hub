@@ -1,41 +1,541 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <title>Loja Produtos - Home</title>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <title>Projeto Web</title>
-</head>
-
-<body>
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="create.html">Cadastro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="list.html">Listagem</a>
-                    </li>
-                </ul>
-            </div>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Loja Produtos</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="create.html">Cadastro</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="list.html">Listagem</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
+    <main class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="card shadow border-0 mb-4">
+            <div class="card-body text-center p-5">
+              <h1 class="display-5 fw-bold text-dark mb-3">Loja Produtos</h1>
+              <p class="lead text-muted mb-4">
+                Sistema de gerenciamento de categorias, departamentos e
+                produtos.
+              </p>
+              <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="create.html" class="btn btn-primary btn-lg px-4"
+                  >Novo Cadastro</a
+                >
+                <a href="list.html" class="btn btn-outline-primary btn-lg px-4"
+                  >Ver Listagem</a
+                >
+              </div>
+            </div>
+          </div>
 
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Estatísticas</h5>
+                  <p class="card-text text-muted">
+                    Dashboard com total, criados no mês e favoritos.
+                  </p>
+                  <button
+                    class="btn btn-info text-white"
+                    data-bs-toggle="modal"
+                    data-bs-target="#statsModal"
+                  >
+                    Ver Stats
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Árvore de Categorias</h5>
+                  <p class="card-text text-muted">
+                    Visualização hierárquica pai e filho.
+                  </p>
+                  <button
+                    class="btn btn-success"
+                    data-bs-toggle="modal"
+                    data-bs-target="#treeModal"
+                  >
+                    Ver Árvore
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Exportar CSV</h5>
+                  <p class="card-text text-muted">
+                    Baixe todas as categorias em formato CSV.
+                  </p>
+                  <button class="btn btn-secondary" onclick="exportCsv()">
+                    Exportar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Sugerir Categorias</h5>
+                  <p class="card-text text-muted">
+                    IA sugere categorias para um tema.
+                  </p>
+                  <button
+                    class="btn btn-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target="#suggestModal"
+                  >
+                    Sugerir
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Classificar Texto</h5>
+                  <p class="card-text text-muted">
+                    IA classifica um texto em uma categoria.
+                  </p>
+                  <button
+                    class="btn btn-dark"
+                    data-bs-toggle="modal"
+                    data-bs-target="#classifyModal"
+                  >
+                    Classificar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Favoritas</h5>
+                  <p class="card-text text-muted">
+                    Veja categorias e produtos favoritos.
+                  </p>
+                  <a href="list.html?filter=favorites" class="btn btn-danger"
+                    >Ver Favoritas</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Departamentos</h5>
+                  <p class="card-text text-muted">
+                    Gerencie departamentos das categorias.
+                  </p>
+                  <a href="list.html?tab=departments" class="btn btn-primary"
+                    >Gerenciar</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Produtos</h5>
+                  <p class="card-text text-muted">
+                    Gerencie produtos vinculados a categorias.
+                  </p>
+                  <a href="list.html?tab=products" class="btn btn-primary"
+                    >Gerenciar</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow border-0 h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Sugerir Produtos</h5>
+                  <p class="card-text text-muted">
+                    IA sugere produtos para uma categoria.
+                  </p>
+                  <button
+                    class="btn btn-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target="#suggestProductModal"
+                  >
+                    Sugerir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/bootstrap.esm.min.js"></script>
-</body>
+    <div class="modal fade" id="statsModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-info text-white">
+            <h5 class="modal-title">Estatísticas</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="statsBody">
+            <div class="text-center py-3">
+              <div class="spinner-border text-info" role="status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="modal fade" id="treeModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">Árvore de Categorias</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="treeBody">
+            <div class="text-center py-3">
+              <div class="spinner-border text-success" role="status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="suggestModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">Sugerir Categorias</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Digite um tema</label>
+              <input
+                type="text"
+                class="form-control"
+                id="suggestInput"
+                placeholder="Ex: tecnologia, esportes..."
+              />
+            </div>
+            <button class="btn btn-warning w-100" onclick="suggestCategories()">
+              Sugerir
+            </button>
+            <div id="suggestResult" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="classifyModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title">Classificar Texto</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Digite um texto</label>
+              <textarea
+                class="form-control"
+                id="classifyInput"
+                rows="3"
+                placeholder="Ex: Spring Boot é um framework Java..."
+              ></textarea>
+            </div>
+            <button class="btn btn-dark w-100" onclick="classifyText()">
+              Classificar
+            </button>
+            <div id="classifyResult" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="suggestProductModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title">Sugerir Produtos</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label fw-semibold"
+                >Digite o nome da categoria</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="suggestProductInput"
+                placeholder="Ex: Eletrônicos, Roupas..."
+              />
+            </div>
+            <button class="btn btn-warning w-100" onclick="suggestProducts()">
+              Sugerir
+            </button>
+            <div id="suggestProductResult" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+      <p class="mb-0">&copy; 2026 Loja Produtos</p>
+    </footer>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+      document
+        .getElementById("statsModal")
+        .addEventListener("show.bs.modal", loadStats);
+      document
+        .getElementById("treeModal")
+        .addEventListener("show.bs.modal", loadTree);
+
+      function loadStats() {
+        const body = document.getElementById("statsBody");
+        body.innerHTML =
+          '<div class="text-center py-3"><div class="spinner-border text-info" role="status"></div></div>';
+
+        fetch("/api/categories/stats")
+          .then((r) => r.json())
+          .then((s) => {
+            body.innerHTML =
+              '<div class="row text-center g-3">' +
+              '<div class="col-6"><div class="p-3 bg-light rounded"><h3>' +
+              s.total +
+              '</h3><small class="text-muted">Total</small></div></div>' +
+              '<div class="col-6"><div class="p-3 bg-light rounded"><h3>' +
+              s.createdThisMonth +
+              '</h3><small class="text-muted">Criadas este mês</small></div></div>' +
+              '<div class="col-6"><div class="p-3 bg-light rounded"><h3>' +
+              s.updatedToday +
+              '</h3><small class="text-muted">Atualizadas hoje</small></div></div>' +
+              '<div class="col-6"><div class="p-3 bg-light rounded"><h3>' +
+              s.favorites +
+              '</h3><small class="text-muted">Favoritas</small></div></div>' +
+              "</div>";
+          })
+          .catch(() => {
+            body.innerHTML =
+              '<div class="alert alert-danger">Erro ao carregar estatísticas.</div>';
+          });
+      }
+
+      function loadTree() {
+        const body = document.getElementById("treeBody");
+        body.innerHTML =
+          '<div class="text-center py-3"><div class="spinner-border text-success" role="status"></div></div>';
+
+        fetch("/api/categories/tree")
+          .then((r) => r.json())
+          .then((tree) => {
+            if (!tree || tree.length === 0) {
+              body.innerHTML =
+                '<p class="text-muted text-center">Nenhuma categoria raiz encontrada.</p>';
+              return;
+            }
+            body.innerHTML = renderTree(tree);
+          })
+          .catch(() => {
+            body.innerHTML =
+              '<div class="alert alert-danger">Erro ao carregar árvore.</div>';
+          });
+      }
+
+      function renderTree(nodes, depth) {
+        depth = depth || 0;
+        let html = '<ul class="list-unstyled ms-' + depth * 3 + '">';
+        for (let n of nodes) {
+          html +=
+            '<li class="py-1"><span class="badge bg-secondary me-2">' +
+            (n.departmentName || n.department || "-") +
+            "</span> " +
+            n.name;
+          if (n.children && n.children.length > 0) {
+            html += renderTree(n.children, depth + 1);
+          }
+          html += "</li>";
+        }
+        html += "</ul>";
+        return html;
+      }
+
+      function suggestCategories() {
+        const input = document.getElementById("suggestInput").value.trim();
+        const result = document.getElementById("suggestResult");
+        if (!input) {
+          result.innerHTML =
+            '<div class="alert alert-warning">Digite um tema.</div>';
+          return;
+        }
+
+        result.innerHTML =
+          '<div class="text-center"><div class="spinner-border spinner-border-sm"></div> Consultando IA...</div>';
+
+        fetch("/api/categories/suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: input }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            const list = data.suggestions || [];
+            if (list.length === 0) {
+              result.innerHTML =
+                '<div class="alert alert-info">Nenhuma sugestão retornada (IA pode não estar configurada).</div>';
+              return;
+            }
+            result.innerHTML =
+              '<div class="d-flex flex-wrap gap-2">' +
+              list
+                .map(
+                  (s) => '<span class="badge bg-primary fs-6">' + s + "</span>",
+                )
+                .join("") +
+              "</div>";
+          })
+          .catch(() => {
+            result.innerHTML =
+              '<div class="alert alert-danger">Erro ao consultar IA.</div>';
+          });
+      }
+
+      function suggestProducts() {
+        const input = document
+          .getElementById("suggestProductInput")
+          .value.trim();
+        const result = document.getElementById("suggestProductResult");
+        if (!input) {
+          result.innerHTML =
+            '<div class="alert alert-warning">Digite uma categoria.</div>';
+          return;
+        }
+
+        result.innerHTML =
+          '<div class="text-center"><div class="spinner-border spinner-border-sm"></div> Consultando IA...</div>';
+
+        fetch("/api/products/suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ categoryName: input }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            const list = data.suggestions || [];
+            if (list.length === 0) {
+              result.innerHTML =
+                '<div class="alert alert-info">Nenhuma sugestão retornada (IA pode não estar configurada).</div>';
+              return;
+            }
+            result.innerHTML =
+              '<div class="d-flex flex-wrap gap-2">' +
+              list
+                .map(
+                  (s) => '<span class="badge bg-primary fs-6">' + s + "</span>",
+                )
+                .join("") +
+              "</div>";
+          })
+          .catch(() => {
+            result.innerHTML =
+              '<div class="alert alert-danger">Erro ao consultar IA.</div>';
+          });
+      }
+
+      function classifyText() {
+        const input = document.getElementById("classifyInput").value.trim();
+        const result = document.getElementById("classifyResult");
+        if (!input) {
+          result.innerHTML =
+            '<div class="alert alert-warning">Digite um texto.</div>';
+          return;
+        }
+
+        result.innerHTML =
+          '<div class="text-center"><div class="spinner-border spinner-border-sm"></div> Classificando...</div>';
+
+        fetch("/api/categories/classify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: input }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.category) {
+              result.innerHTML =
+                '<div class="alert alert-success">Categoria sugerida: <strong>' +
+                data.category +
+                "</strong></div>";
+            } else {
+              result.innerHTML =
+                '<div class="alert alert-info">' +
+                (data.message || "Não foi possível classificar.") +
+                "</div>";
+            }
+          })
+          .catch(() => {
+            result.innerHTML =
+              '<div class="alert alert-danger">Erro ao classificar.</div>';
+          });
+      }
+
+      function exportCsv() {
+        window.location.href = "/api/categories/export";
+      }
+    </script>
+  </body>
 </html>

@@ -3,16 +3,42 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LojaProdutos.Infrastructure.Data;
 
+/// <summary>
+/// EF Core database context for the application, configuring entities, relationships, query filters, and seed data.
+/// </summary>
 public class AppDbContext : DbContext
 {
+    /// <summary>
+    /// Initializes a new instance of <see cref="AppDbContext"/>.
+    /// </summary>
+    /// <param name="options">The database context options.</param>
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     { }
 
+    /// <summary>
+    /// Gets or sets the Categories table.
+    /// </summary>
     public DbSet<Category> Categories { get; set; }
+
+    /// <summary>
+    /// Gets or sets the CategoryLogs audit table.
+    /// </summary>
     public DbSet<CategoryLog> CategoryLogs { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Departments table.
+    /// </summary>
     public DbSet<Department> Departments { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Products table.
+    /// </summary>
     public DbSet<Product> Products { get; set; }
 
+    /// <summary>
+    /// Configures entity mappings, relationships, query filters (soft delete), and seeds initial department data.
+    /// </summary>
+    /// <param name="modelBuilder">The model builder used to configure entities.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Department>(entity =>

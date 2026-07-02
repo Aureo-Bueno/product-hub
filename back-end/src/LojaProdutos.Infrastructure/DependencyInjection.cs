@@ -10,8 +10,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LojaProdutos.Infrastructure;
 
+/// <summary>
+/// Static extension class for registering infrastructure services, repositories, and DbContext into the DI container.
+/// </summary>
 public static class DependencyInjection
 {
+    /// <summary>
+    /// Registers all infrastructure dependencies including DbContext with SQL Server, repositories, application services, and the Gemini HTTP client with resilience policies.
+    /// </summary>
+    /// <param name="services">The service collection to add registrations to.</param>
+    /// <param name="configuration">The application configuration for retrieving the connection string.</param>
+    /// <returns>The same service collection for chaining.</returns>
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -31,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IDepartmentService, DepartmentService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<ILogService, Infrastructure.Services.LogService>();
 
         services.AddHttpClient<IGeminiService, GeminiService>(client =>
         {
